@@ -1,5 +1,10 @@
 import React from 'react';
 
+// a 태그 대신에 react-router 의 Link 컴포넌트를 사용했는데요,
+// 이 컴포넌트는 페이지를 새로 로딩하는것을 막고, 라우트에 보여지는 내용만 변하게 해줍니다
+// (만약에 a 태그로 이동을하게된다면 페이지를 처음부터 새로 로딩하게됩니다)
+import { Link } from 'react-router';
+
 class Header extends React.Component {
     render() {
         const loginButton = (
@@ -21,7 +26,7 @@ class Header extends React.Component {
         return (
           <nav>
               <div className="nav-wrapper blue darken-1">
-                  <a className="brand-logo center">아마따</a>
+                  <Link to="/" className="brand-logo center">아마따</Link>
 
                   <ul>
                       <li><a><i className="material-icons">search</i></a></li>
