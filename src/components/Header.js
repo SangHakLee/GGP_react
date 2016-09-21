@@ -11,7 +11,7 @@ class Header extends React.Component {
             <li>
                 <a>
                     <Link to="/login">
-                      <i className="material-icons">vpn_key</i>
+                      <i className="material-icons">perm_identity</i>
                     </Link>
                 </a>
             </li>
