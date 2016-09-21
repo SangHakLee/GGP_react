@@ -10,7 +10,9 @@ class Header extends React.Component {
         const loginButton = (
             <li>
                 <a>
-                    <i className="material-icons">vpn_key</i>
+                    <Link to="/login">
+                      <i className="material-icons">vpn_key</i>
+                    </Link>
                 </a>
             </li>
         );
@@ -48,6 +50,7 @@ Header.propTypes = {
     onLogout: React.PropTypes.func
 };
 
+// 로그인 여부에 따라 버튼 달리 보여줌
 Header.defaultProps = {
     isLoggedIn: false,
     onLogout: () => { console.error("logout function not defined");}
