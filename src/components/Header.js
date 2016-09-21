@@ -9,11 +9,9 @@ class Header extends React.Component {
     render() {
         const loginButton = (
             <li>
-                <a>
-                    <Link to="/login">
-                      <i className="material-icons">perm_identity</i>
-                    </Link>
-                </a>
+                <Link to="/login">
+                  <i className="material-icons">perm_identity</i>
+                </Link>
             </li>
         );
 

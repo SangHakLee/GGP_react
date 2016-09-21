@@ -1,6 +1,6 @@
 // src/containers/Login.js
 import React from 'react';
-import { Authentication } from 'components';
+import { Authentication, Header } from 'components';
 
 class Login extends React.Component {
     render() {
