@@ -14,8 +14,10 @@
   "dependencies": {
     "axios": "^0.14.0",
     "bcryptjs": "^2.3.0",
+    "body-parser": "^1.15.2",
     "express-session": "^1.14.1",
     "mongoose": "^4.6.0",
+    "morgan": "^1.7.0",
     "react": "^15.2.1",
     "react-addons-update": "^15.3.2",
     "react-dom": "^15.2.1",
