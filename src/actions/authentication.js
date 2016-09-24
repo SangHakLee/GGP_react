@@ -4,6 +4,7 @@ import {
     AUTH_LOGIN_FAILURE
 } from './ActionTypes';
 
+import axios from 'axios';
 
 /*============================================================================
     authentication
@@ -12,6 +13,18 @@ import {
 /* LOGIN */
 export function loginRequest(username, password) {
     /* To be implemented */
+    return (dispatch) => {
+      dispatch(login());
+
+      // API 요청
+      return axios.post('/api/account/signin', {username, password})
+      .then((response) => {
+          // 성공
+          dispatch(loginSuccess(username));
+      }).catch((error) => {
+        dispatch(loginFailure());
+      });
+    };
 }
 
 export function login() {

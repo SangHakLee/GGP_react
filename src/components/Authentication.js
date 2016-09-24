@@ -12,12 +12,28 @@ class Authentication extends React.Component {
             password: ""
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
     }
 
     handleChange(e) {
         let nextState = {};
         nextState[e.target.name] = e.target.value;
         this.setState(nextState);
+    }
+
+    handleLogin() {
+        let id = this.state.username;
+        let pw = this.state.password;
+
+        this.props.onLogin(id, pw).then(
+            (success) => {
+                if(!success) {
+                    this.setState({
+                        password: ''
+                    });
+                }
+            }
+        );
     }
 
     render() {
@@ -50,7 +66,8 @@ class Authentication extends React.Component {
               <div className="card-content">
                   <div className="row">
                       {inputBoxes}
-                      <a className="waves-effect waves-light btn">Login</a>
+                      <a className="waves-effect waves-light btn"
+                        onClick={this.handleLogin} >Login</a>
                   </div>
               </div>
 
