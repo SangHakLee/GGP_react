@@ -39,7 +39,7 @@ class Write extends React.Component {
                   <div className="card-content">
                     <textarea
                             className="materialize-textarea"
-                            placeholder="Write down your memo"
+                            placeholder="키워드를 입력하세요."
                             value={this.state.contents}
                             onChange={this.handleChange}>
                     </textarea>

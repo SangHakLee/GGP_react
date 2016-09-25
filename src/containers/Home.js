@@ -1,7 +1,7 @@
 // src/containers/Home.js
 import React from 'react';
 import { connect } from 'react-redux';
-import { Write } from 'components';
+import { Write, MemoList } from 'components';
 import { memoPostRequest } from 'actions/memo';
 
 class Home extends React.Component {
@@ -53,6 +53,7 @@ class Home extends React.Component {
         return (
             <div className="wrapper">
                 { this.props.isLoggedIn ? write : undefined }
+                <MemoList/>
             </div>
         );
     }
