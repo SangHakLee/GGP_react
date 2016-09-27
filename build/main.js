@@ -70,9 +70,20 @@ app.use('/', _express2.default.static(_path2.default.join(__dirname, './../publi
 
 app.use('/api', _routes2.default);
 
-app.get('/hello', function (req, res) {
-    return res.send('Hello CodeLab');
+/* support client-side routing */
+app.get('*', function (req, res) {
+    console.log('** app.get(');
+    res.sendFile(_path2.default.resolve(__dirname, './../public/index.html'));
 });
+/*
+위 작업을 하지 않으면, URL 을 직접 입력하여 들어갔을때 클라이언트사이드 라우팅이 제대로 작동하지 않습니다.
+클라이언트에서 링크를 클릭해서 들어갔을때는 작동 하지만요,
+한번 URL 을 입력하여 클라이언트 사이드 라우팅을 테스트 해보세요.
+
+http://localhost/login
+http://localhost/register
+
+*/
 
 /* handle error */
 app.use(function (err, req, res, next) {
