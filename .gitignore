@@ -2,3 +2,8 @@
 .tern-project
 node_modules
 nohup.out
+
+build/main.js
+npm-debug.log
+public/bundle.js
+webpack.dev.config.js
