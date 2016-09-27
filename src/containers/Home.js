@@ -8,14 +8,43 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.handlePost = this.handlePost.bind(this);
+		this.loadNewMemo = this.loadNewMemo.bind(this);
     }
 
 	componentDidMount() {
+		// 5초마다 새 메모 가져오기
+		const loadMemoLoop = () => {
+            this.loadNewMemo().then(
+                () => {
+                    this.memoLoaderTimeoutId = setTimeout(loadMemoLoop, 5000);
+                }
+            );
+        };
         this.props.memoListRequest(true).then(
             () => {
                 console.log('componentDidMount', this.props.memoData);
+				loadMemoLoop();
             }
         );
+    }
+
+	componentWillUnmount() {
+        // STOPS THE loadMemoLoop
+        clearTimeout(this.memoLoaderTimeoutId);
+    }
+
+	loadNewMemo() {
+        // CANCEL IF THERE IS A PENDING REQUEST
+        if(this.props.listStatus === 'WAITING')
+            return new Promise((resolve, reject)=> {
+                resolve();
+            });
+
+        // IF PAGE IS EMPTY, DO THE INITIAL LOADING
+        if(this.props.memoData.length === 0 )
+            return this.props.memoListRequest(true);
+
+        return this.props.memoListRequest(false, 'new', this.props.memoData[0]._id);
     }
 
   /* POST MEMO */
@@ -25,7 +54,7 @@ class Home extends React.Component {
                 if(this.props.postStatus.status === "SUCCESS") {
                     // TRIGGER LOAD NEW MEMO
                     // TO BE IMPLEMENTED
-                    Materialize.toast('Success!', 2000);
+                    Materialize.toast('성공!', 2000);
                 } else {
                     /*
                         ERROR CODES
@@ -158,7 +187,8 @@ const mapStateToProps = (state) => {
         isLoggedIn: state.authentication.status.isLoggedIn,
         postStatus: state.memo.post,
 		currentUser: state.authentication.status.currentUser,
-        memoData: state.memo.list.data
+        memoData: state.memo.list.data,
+		listStatus: state.memo.list.status
     };
 };
 

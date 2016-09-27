@@ -55,6 +55,26 @@ export default function memo(state, action) {
                         isLast: { $set: action.data.length < 6 }
                     }
                 });
+            }else {
+                if(action.listType === 'new') {
+                    return update(state, {
+                        list: {
+                            status: { $set: 'SUCCESS' },
+							// 배열 앞에 추가
+                            data: { $unshift: action.data },
+                        }
+                    });
+                } else {
+                    return update(state, {
+                        list: {
+                            status: { $set: 'SUCCESS' },
+							// 배열 뒤에 추가
+                            data: { $push: action.data },
+                            isLast: { $set: action.data.length < 6 }
+                        }
+                    });
+                }
+
             }
             // loading older or newer memo
             // to be implemented..
