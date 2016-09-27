@@ -2,12 +2,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Write, MemoList } from 'components';
-import { memoPostRequest } from 'actions/memo';
+import { memoPostRequest, memoListRequest } from 'actions/memo';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
         this.handlePost = this.handlePost.bind(this);
+    }
+
+	componentDidMount() {
+        this.props.memoListRequest(true).then(
+            () => {
+                console.log('componentDidMount', this.props.memoData);
+            }
+        );
     }
 
   /* POST MEMO */
@@ -51,7 +59,11 @@ class Home extends React.Component {
 
 
     render() {
-        const write = ( <Write onPost={this.handlePost}/> );
+        const write = (
+			<Write
+				onPost={this.props.handlePost}
+			/>
+		);
 
         var testData = [
             {
@@ -131,17 +143,22 @@ class Home extends React.Component {
         return (
             <div className="wrapper">
                 { this.props.isLoggedIn ? write : undefined }
-                <MemoList data={testData} currentUser="hak"/>
+                <MemoList data={this.props.memoData} currentUser={this.props.currentUser}/>
             </div>
         );
     }
 }
 
+// <MemoList data={testData} currentUser="hak"/> // 테스트 데이터
+
+
 const mapStateToProps = (state) => {
-    console.log(state)
+    console.log('state', state)
     return {
         isLoggedIn: state.authentication.status.isLoggedIn,
-        postStatus: state.memo.post
+        postStatus: state.memo.post,
+		currentUser: state.authentication.status.currentUser,
+        memoData: state.memo.list.data
     };
 };
 
@@ -149,6 +166,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         memoPostRequest: (contents) => {
             return dispatch(memoPostRequest(contents));
+        },
+		memoListRequest: (isInitial, listType, id, username) => {
+            return dispatch(memoListRequest(isInitial, listType, id, username));
         }
     };
 };

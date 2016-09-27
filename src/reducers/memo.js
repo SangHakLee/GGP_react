@@ -5,6 +5,11 @@ const initialState = {
     post: {
         status: 'INIT',
         error: -1
+    },
+	list: {
+        status: 'INIT',
+        data: [],
+        isLast: false
     }
 };
 
@@ -32,6 +37,32 @@ export default function memo(state, action) {
                 post: {
                     status: { $set: 'FAILURE' },
                     error: { $set: action.error }
+                }
+            });
+		case types.MEMO_LIST:
+            return update(state, {
+                list: {
+                    status: { $set: 'WAITING' },
+                }
+            });
+        case types.MEMO_LIST_SUCCESS:
+            if(action.isInitial) {
+                return update(state, {
+                    list: {
+                        status: { $set: 'SUCCESS' },
+                        data: { $set: action.data },
+						// 현재 로딩이 마지막인지 알려줌, 6개 미만이면 더 이상 메모 없다.
+                        isLast: { $set: action.data.length < 6 }
+                    }
+                });
+            }
+            // loading older or newer memo
+            // to be implemented..
+            return state;
+        case types.MEMO_LIST_FAILURE:
+            return update(state, {
+                list: {
+                    status: { $set: 'FAILURE' }
                 }
             });
         default:

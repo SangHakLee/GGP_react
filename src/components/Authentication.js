@@ -101,7 +101,7 @@ class Authentication extends React.Component {
                   <div className="row">
                       {inputBoxes}
                       <a className="waves-effect waves-light btn"
-                        onClick={this.handleLogin} >Login</a>
+                        onClick={this.handleLogin} >전송</a>
                   </div>
               </div>
 
@@ -109,7 +109,7 @@ class Authentication extends React.Component {
               <div className="footer">
                   <div className="card-content">
                       <div className="center" >
-                        <Link to="/register">Join</Link>
+                        <Link to="/register">회원가입</Link>
                       </div>
                   </div>
               </div>
@@ -122,17 +122,17 @@ class Authentication extends React.Component {
               <div className="row">
                   {inputBoxes}
                   <a className="waves-effect waves-light btn"
-                    onClick={this.handleRegister}>CREATE</a>
+                    onClick={this.handleRegister}>가입</a>
               </div>
           </div>
         );
 
         return (
             <div className="container auth">
-                <Link className="logo" to="/">아마따 Authentication</Link>
+                <Link className="logo" to="/">아마따</Link>
                 <div className="card">
                     <div className="header blue white-text center">
-                        <div className="card-content">{this.props.mode ? "LOGIN" : "JOIN"}</div>
+                        <div className="card-content">{this.props.mode ? "로그인" : "회원가입"}</div>
                     </div>
                     {this.props.mode ? loginView : registerView }
                 </div>
