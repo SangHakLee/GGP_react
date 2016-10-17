@@ -60,7 +60,9 @@ router.post('/', function (req, res) {
 
     // SAVE IN DATABASE
     memo.save(function (err) {
-        if (err) throw err;
+        if (err) {
+            console.log('err', err);throw err;
+        }
         return res.json({ success: true });
     });
 });
@@ -202,6 +204,49 @@ router.put('/:id', function (req, res) {
             });
         });
     });
+});
+
+/*
+    READ ADDITIONAL (OLD/NEW) MEMO: GET /api/memo/:listType/:id
+	현재 페이지에 로딩되어있는 데이터 중에서 (초기로딩 된 데이터) 가장 위에 있는 메모의 _id 값보다
+	높은 _id 를 갖고있는 메모를 쿼리하면 새로운 메모들을 읽을 수 있고
+	가장 아래에 있는 메모의 _id 값보다 낮은 _id 를 갖고있는 메모를 쿼리하면 이전 메모들을 읽을 수 있습니다
+*/
+router.get('/:listType/:id', function (req, res) {
+    var listType = req.params.listType;
+    var id = req.params.id;
+
+    // CHECK LIST TYPE VALIDITY
+    if (listType !== 'old' && listType !== 'new') {
+        return res.status(400).json({
+            error: "INVALID LISTTYPE",
+            code: 1
+        });
+    }
+
+    // CHECK MEMO ID VALIDITY
+    if (!_mongoose2.default.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+            error: "INVALID ID",
+            code: 2
+        });
+    }
+
+    var objId = new _mongoose2.default.Types.ObjectId(req.params.id);
+
+    if (listType === 'new') {
+        // GET NEWER MEMO
+        _memo2.default.find({ _id: { $gt: objId } }).sort({ _id: -1 }).limit(6).exec(function (err, memos) {
+            if (err) throw err;
+            return res.json(memos);
+        });
+    } else {
+        // GET OLDER MEMO
+        _memo2.default.find({ _id: { $lt: objId } }).sort({ _id: -1 }).limit(6).exec(function (err, memos) {
+            if (err) throw err;
+            return res.json(memos);
+        });
+    }
 });
 
 exports.default = router;

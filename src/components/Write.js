@@ -22,6 +22,7 @@ class Write extends React.Component {
 
   handlePost() {
         let contents = this.state.contents;
+		console.lot('contents', contents);
 
         this.props.onPost(contents).then(
             () => {
@@ -30,7 +31,15 @@ class Write extends React.Component {
                 });
             }
         );
-    }
+	}
+
+	handleFuck() {
+		this.props.test().then(
+			() => {
+				console.log('????');
+			}
+		);
+	}
 
     render() {
       return (
@@ -46,6 +55,7 @@ class Write extends React.Component {
                   </div>
                   <div className="card-action">
                       <a onClick={this.handlePost}>POST</a>
+                      <a onClick={this.handleFuck}>Fuck</a>
                   </div>
               </div>
           </div>
@@ -54,11 +64,15 @@ class Write extends React.Component {
 }
 
 Write.propTypes = {
-    onPost: React.PropTypes.func
+    onPost: React.PropTypes.func,
+	test : React.PropTypes.func
 };
 
 Write.defaultProps = {
-    onPost: (contents) => { console.error('post function not defined'); }
+    onPost: (contents) => { console.error('post function not defined', contents); },
+	test: () => {
+		console.log('what the f');
+	}
 };
 
 export default Write;

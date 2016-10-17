@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(300);
+	module.exports = __webpack_require__(301);
 
 
 /***/ },
@@ -70,11 +70,11 @@
 
 	var _redux = __webpack_require__(252);
 
-	var _reducers = __webpack_require__(294);
+	var _reducers = __webpack_require__(295);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _reduxThunk = __webpack_require__(299);
+	var _reduxThunk = __webpack_require__(300);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -1102,6 +1102,14 @@
 	  var source = null;
 
 	  if (config != null) {
+	    if (process.env.NODE_ENV !== 'production') {
+	      process.env.NODE_ENV !== 'production' ? warning(
+	      /* eslint-disable no-proto */
+	      config.__proto__ == null || config.__proto__ === Object.prototype,
+	      /* eslint-enable no-proto */
+	      'React.createElement(...): Expected props argument to be a plain object. ' + 'Properties defined in its prototype chain will be ignored.') : void 0;
+	    }
+
 	    if (hasValidRef(config)) {
 	      ref = config.ref;
 	    }
@@ -1202,6 +1210,14 @@
 	  var owner = element._owner;
 
 	  if (config != null) {
+	    if (process.env.NODE_ENV !== 'production') {
+	      process.env.NODE_ENV !== 'production' ? warning(
+	      /* eslint-disable no-proto */
+	      config.__proto__ == null || config.__proto__ === Object.prototype,
+	      /* eslint-enable no-proto */
+	      'React.cloneElement(...): Expected props argument to be a plain object. ' + 'Properties defined in its prototype chain will be ignored.') : void 0;
+	    }
+
 	    if (hasValidRef(config)) {
 	      // Silently steal the ref from the parent.
 	      ref = config.ref;
@@ -4235,7 +4251,7 @@
 
 	'use strict';
 
-	module.exports = '15.3.2';
+	module.exports = '15.3.1';
 
 /***/ },
 /* 34 */
@@ -5217,10 +5233,8 @@
 	function getFallbackBeforeInputChars(topLevelType, nativeEvent) {
 	  // If we are currently composing (IME) and using a fallback to do so,
 	  // try to extract the composed characters from the fallback object.
-	  // If composition event is available, we extract a string only at
-	  // compositionevent, otherwise extract it at fallback events.
 	  if (currentComposition) {
-	    if (topLevelType === topLevelTypes.topCompositionEnd || !canUseCompositionEvent && isFallbackCompositionEnd(topLevelType, nativeEvent)) {
+	    if (topLevelType === topLevelTypes.topCompositionEnd || isFallbackCompositionEnd(topLevelType, nativeEvent)) {
 	      var chars = currentComposition.getData();
 	      FallbackCompositionState.release(currentComposition);
 	      currentComposition = null;
@@ -6829,8 +6843,7 @@
 
 	    if (event.preventDefault) {
 	      event.preventDefault();
-	    } else if (typeof event.returnValue !== 'unknown') {
-	      // eslint-disable-line valid-typeof
+	    } else {
 	      event.returnValue = false;
 	    }
 	    this.isDefaultPrevented = emptyFunction.thatReturnsTrue;
@@ -7087,7 +7100,7 @@
 	var doesChangeEventBubble = false;
 	if (ExecutionEnvironment.canUseDOM) {
 	  // See `handleChange` comment below
-	  doesChangeEventBubble = isEventSupported('change') && (!document.documentMode || document.documentMode > 8);
+	  doesChangeEventBubble = isEventSupported('change') && (!('documentMode' in document) || document.documentMode > 8);
 	}
 
 	function manualDispatchChangeEvent(nativeEvent) {
@@ -7153,7 +7166,7 @@
 	  // deleting text, so we ignore its input events.
 	  // IE10+ fire input events to often, such when a placeholder
 	  // changes or when an input with a placeholder is focused.
-	  isInputEventSupported = isEventSupported('input') && (!document.documentMode || document.documentMode > 11);
+	  isInputEventSupported = isEventSupported('input') && (!('documentMode' in document) || document.documentMode > 11);
 	}
 
 	/**
@@ -8382,6 +8395,12 @@
 	    endLifeCycleTimer(debugID, timerType);
 	    emitEvent('onEndLifeCycleTimer', debugID, timerType);
 	  },
+	  onError: function (debugID) {
+	    if (currentTimerDebugID != null) {
+	      endLifeCycleTimer(currentTimerDebugID, currentTimerType);
+	    }
+	    emitEvent('onError', debugID);
+	  },
 	  onBeginProcessingChildContext: function () {
 	    emitEvent('onBeginProcessingChildContext');
 	  },
@@ -9455,8 +9474,6 @@
 	    allowFullScreen: HAS_BOOLEAN_VALUE,
 	    allowTransparency: 0,
 	    alt: 0,
-	    // specifies target context for links with `preload` type
-	    as: 0,
 	    async: HAS_BOOLEAN_VALUE,
 	    autoComplete: 0,
 	    // autoFocus is polyfilled/normalized by AutoFocusUtils
@@ -9537,7 +9554,6 @@
 	    optimum: 0,
 	    pattern: 0,
 	    placeholder: 0,
-	    playsInline: HAS_BOOLEAN_VALUE,
 	    poster: 0,
 	    preload: 0,
 	    profile: 0,
@@ -10060,9 +10076,9 @@
 	  if (node.namespaceURI === DOMNamespaces.svg && !('innerHTML' in node)) {
 	    reusableSVGContainer = reusableSVGContainer || document.createElement('div');
 	    reusableSVGContainer.innerHTML = '<svg>' + html + '</svg>';
-	    var svgNode = reusableSVGContainer.firstChild;
-	    while (svgNode.firstChild) {
-	      node.appendChild(svgNode.firstChild);
+	    var newNodes = reusableSVGContainer.firstChild.childNodes;
+	    for (var i = 0; i < newNodes.length; i++) {
+	      node.appendChild(newNodes[i]);
 	    }
 	  } else {
 	    node.innerHTML = html;
@@ -10990,9 +11006,9 @@
 	  ReactDOMOption.postMountWrapper(inst);
 	}
 
-	var setAndValidateContentChildDev = emptyFunction;
+	var setContentChildForInstrumentation = emptyFunction;
 	if (process.env.NODE_ENV !== 'production') {
-	  setAndValidateContentChildDev = function (content) {
+	  setContentChildForInstrumentation = function (content) {
 	    var hasExistingContent = this._contentDebugID != null;
 	    var debugID = this._debugID;
 	    // This ID represents the inlined child that has no backing instance:
@@ -11006,7 +11022,6 @@
 	      return;
 	    }
 
-	    validateDOMNesting(null, String(content), this, this._ancestorInfo);
 	    this._contentDebugID = contentDebugID;
 	    if (hasExistingContent) {
 	      ReactInstrumentation.debugTool.onBeforeUpdateComponent(contentDebugID, content);
@@ -11181,7 +11196,7 @@
 	  this._flags = 0;
 	  if (process.env.NODE_ENV !== 'production') {
 	    this._ancestorInfo = null;
-	    setAndValidateContentChildDev.call(this, null);
+	    setContentChildForInstrumentation.call(this, null);
 	  }
 	}
 
@@ -11281,7 +11296,7 @@
 	      if (parentInfo) {
 	        // parentInfo should always be present except for the top-level
 	        // component when server rendering
-	        validateDOMNesting(this._tag, null, this, parentInfo);
+	        validateDOMNesting(this._tag, this, parentInfo);
 	      }
 	      this._ancestorInfo = validateDOMNesting.updatedAncestorInfo(parentInfo, this._tag, this);
 	    }
@@ -11450,7 +11465,7 @@
 	        // TODO: Validate that text is allowed as a child of this node
 	        ret = escapeTextContentForBrowser(contentToUse);
 	        if (process.env.NODE_ENV !== 'production') {
-	          setAndValidateContentChildDev.call(this, contentToUse);
+	          setContentChildForInstrumentation.call(this, contentToUse);
 	        }
 	      } else if (childrenToUse != null) {
 	        var mountImages = this.mountChildren(childrenToUse, transaction, context);
@@ -11487,7 +11502,7 @@
 	      if (contentToUse != null) {
 	        // TODO: Validate that text is allowed as a child of this node
 	        if (process.env.NODE_ENV !== 'production') {
-	          setAndValidateContentChildDev.call(this, contentToUse);
+	          setContentChildForInstrumentation.call(this, contentToUse);
 	        }
 	        DOMLazyTree.queueText(lazyTree, contentToUse);
 	      } else if (childrenToUse != null) {
@@ -11719,7 +11734,7 @@
 	      if (lastContent !== nextContent) {
 	        this.updateTextContent('' + nextContent);
 	        if (process.env.NODE_ENV !== 'production') {
-	          setAndValidateContentChildDev.call(this, nextContent);
+	          setContentChildForInstrumentation.call(this, nextContent);
 	        }
 	      }
 	    } else if (nextHtml != null) {
@@ -11731,7 +11746,7 @@
 	      }
 	    } else if (nextChildren != null) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        setAndValidateContentChildDev.call(this, null);
+	        setContentChildForInstrumentation.call(this, null);
 	      }
 
 	      this.updateChildren(nextChildren, transaction, context);
@@ -11786,7 +11801,7 @@
 	    this._wrapperState = null;
 
 	    if (process.env.NODE_ENV !== 'production') {
-	      setAndValidateContentChildDev.call(this, null);
+	      setContentChildForInstrumentation.call(this, null);
 	    }
 	  },
 
@@ -13059,19 +13074,6 @@
 	  },
 
 	  /**
-	   * Protect against document.createEvent() returning null
-	   * Some popup blocker extensions appear to do this:
-	   * https://github.com/facebook/react/issues/6887
-	   */
-	  supportsEventPageXY: function () {
-	    if (!document.createEvent) {
-	      return false;
-	    }
-	    var ev = document.createEvent('MouseEvent');
-	    return ev != null && 'pageX' in ev;
-	  },
-
-	  /**
 	   * Listens to window scroll and resize events. We cache scroll values so that
 	   * application code can access them without triggering reflows.
 	   *
@@ -13084,7 +13086,7 @@
 	   */
 	  ensureScrollValueMonitoring: function () {
 	    if (hasEventPageXY === undefined) {
-	      hasEventPageXY = ReactBrowserEventEmitter.supportsEventPageXY();
+	      hasEventPageXY = document.createEvent && 'pageX' in document.createEvent('MouseEvent');
 	    }
 	    if (!hasEventPageXY && !isMonitoringScrollValue) {
 	      var refresh = ViewportMetrics.refreshScrollValues;
@@ -13370,7 +13372,7 @@
 
 	function isControlled(props) {
 	  var usesChecked = props.type === 'checkbox' || props.type === 'radio';
-	  return usesChecked ? props.checked != null : props.value != null;
+	  return usesChecked ? props.checked !== undefined : props.value !== undefined;
 	}
 
 	/**
@@ -15143,29 +15145,34 @@
 	  }
 	}
 
+	function invokeComponentDidMountWithTimer() {
+	  var publicInstance = this._instance;
+	  if (this._debugID !== 0) {
+	    ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentDidMount');
+	  }
+	  publicInstance.componentDidMount();
+	  if (this._debugID !== 0) {
+	    ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentDidMount');
+	  }
+	}
+
+	function invokeComponentDidUpdateWithTimer(prevProps, prevState, prevContext) {
+	  var publicInstance = this._instance;
+	  if (this._debugID !== 0) {
+	    ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentDidUpdate');
+	  }
+	  publicInstance.componentDidUpdate(prevProps, prevState, prevContext);
+	  if (this._debugID !== 0) {
+	    ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentDidUpdate');
+	  }
+	}
+
 	function shouldConstruct(Component) {
 	  return !!(Component.prototype && Component.prototype.isReactComponent);
 	}
 
 	function isPureComponent(Component) {
 	  return !!(Component.prototype && Component.prototype.isPureReactComponent);
-	}
-
-	// Separated into a function to contain deoptimizations caused by try/finally.
-	function measureLifeCyclePerf(fn, debugID, timerType) {
-	  if (debugID === 0) {
-	    // Top-level wrappers (see ReactMount) and empty components (see
-	    // ReactDOMEmptyComponent) are invisible to hooks and devtools.
-	    // Both are implementation details that should go away in the future.
-	    return fn();
-	  }
-
-	  ReactInstrumentation.debugTool.onBeginLifeCycleTimer(debugID, timerType);
-	  try {
-	    return fn();
-	  } finally {
-	    ReactInstrumentation.debugTool.onEndLifeCycleTimer(debugID, timerType);
-	  }
 	}
 
 	/**
@@ -15259,8 +15266,6 @@
 	   * @internal
 	   */
 	  mountComponent: function (transaction, hostParent, hostContainerInfo, context) {
-	    var _this = this;
-
 	    this._context = context;
 	    this._mountOrder = nextMountID++;
 	    this._hostParent = hostParent;
@@ -15350,11 +15355,7 @@
 
 	    if (inst.componentDidMount) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        transaction.getReactMountReady().enqueue(function () {
-	          measureLifeCyclePerf(function () {
-	            return inst.componentDidMount();
-	          }, _this._debugID, 'componentDidMount');
-	        });
+	        transaction.getReactMountReady().enqueue(invokeComponentDidMountWithTimer, this);
 	      } else {
 	        transaction.getReactMountReady().enqueue(inst.componentDidMount, inst);
 	      }
@@ -15378,26 +15379,35 @@
 
 	  _constructComponentWithoutOwner: function (doConstruct, publicProps, publicContext, updateQueue) {
 	    var Component = this._currentElement.type;
-
+	    var instanceOrElement;
 	    if (doConstruct) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        return measureLifeCyclePerf(function () {
-	          return new Component(publicProps, publicContext, updateQueue);
-	        }, this._debugID, 'ctor');
-	      } else {
-	        return new Component(publicProps, publicContext, updateQueue);
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'ctor');
+	        }
+	      }
+	      instanceOrElement = new Component(publicProps, publicContext, updateQueue);
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'ctor');
+	        }
+	      }
+	    } else {
+	      // This can still be an instance in case of factory components
+	      // but we'll count this as time spent rendering as the more common case.
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'render');
+	        }
+	      }
+	      instanceOrElement = Component(publicProps, publicContext, updateQueue);
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'render');
+	        }
 	      }
 	    }
-
-	    // This can still be an instance in case of factory components
-	    // but we'll count this as time spent rendering as the more common case.
-	    if (process.env.NODE_ENV !== 'production') {
-	      return measureLifeCyclePerf(function () {
-	        return Component(publicProps, publicContext, updateQueue);
-	      }, this._debugID, 'render');
-	    } else {
-	      return Component(publicProps, publicContext, updateQueue);
-	    }
+	    return instanceOrElement;
 	  },
 
 	  performInitialMountWithErrorHandling: function (renderedElement, hostParent, hostContainerInfo, transaction, context) {
@@ -15406,6 +15416,11 @@
 	    try {
 	      markup = this.performInitialMount(renderedElement, hostParent, hostContainerInfo, transaction, context);
 	    } catch (e) {
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onError();
+	        }
+	      }
 	      // Roll back to checkpoint, handle error (which may add items to the transaction), and take a new checkpoint
 	      transaction.rollback(checkpoint);
 	      this._instance.unstable_handleError(e);
@@ -15426,19 +15441,17 @@
 
 	  performInitialMount: function (renderedElement, hostParent, hostContainerInfo, transaction, context) {
 	    var inst = this._instance;
-
-	    var debugID = 0;
-	    if (process.env.NODE_ENV !== 'production') {
-	      debugID = this._debugID;
-	    }
-
 	    if (inst.componentWillMount) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        measureLifeCyclePerf(function () {
-	          return inst.componentWillMount();
-	        }, debugID, 'componentWillMount');
-	      } else {
-	        inst.componentWillMount();
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillMount');
+	        }
+	      }
+	      inst.componentWillMount();
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillMount');
+	        }
 	      }
 	      // When mounting, calls to `setState` by `componentWillMount` will set
 	      // `this._pendingStateQueue` without triggering a re-render.
@@ -15458,12 +15471,15 @@
 	    );
 	    this._renderedComponent = child;
 
-	    var markup = ReactReconciler.mountComponent(child, transaction, hostParent, hostContainerInfo, this._processChildContext(context), debugID);
+	    var selfDebugID = 0;
+	    if (process.env.NODE_ENV !== 'production') {
+	      selfDebugID = this._debugID;
+	    }
+	    var markup = ReactReconciler.mountComponent(child, transaction, hostParent, hostContainerInfo, this._processChildContext(context), selfDebugID);
 
 	    if (process.env.NODE_ENV !== 'production') {
-	      if (debugID !== 0) {
-	        var childDebugIDs = child._debugID !== 0 ? [child._debugID] : [];
-	        ReactInstrumentation.debugTool.onSetChildren(debugID, childDebugIDs);
+	      if (this._debugID !== 0) {
+	        ReactInstrumentation.debugTool.onSetChildren(this._debugID, child._debugID !== 0 ? [child._debugID] : []);
 	      }
 	    }
 
@@ -15484,22 +15500,24 @@
 	    if (!this._renderedComponent) {
 	      return;
 	    }
-
 	    var inst = this._instance;
 
 	    if (inst.componentWillUnmount && !inst._calledComponentWillUnmount) {
 	      inst._calledComponentWillUnmount = true;
-
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillUnmount');
+	        }
+	      }
 	      if (safely) {
 	        var name = this.getName() + '.componentWillUnmount()';
 	        ReactErrorUtils.invokeGuardedCallback(name, inst.componentWillUnmount.bind(inst));
 	      } else {
-	        if (process.env.NODE_ENV !== 'production') {
-	          measureLifeCyclePerf(function () {
-	            return inst.componentWillUnmount();
-	          }, this._debugID, 'componentWillUnmount');
-	        } else {
-	          inst.componentWillUnmount();
+	        inst.componentWillUnmount();
+	      }
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillUnmount');
 	        }
 	      }
 	    }
@@ -15586,21 +15604,13 @@
 	  _processChildContext: function (currentContext) {
 	    var Component = this._currentElement.type;
 	    var inst = this._instance;
-	    var childContext;
-
-	    if (inst.getChildContext) {
-	      if (process.env.NODE_ENV !== 'production') {
-	        ReactInstrumentation.debugTool.onBeginProcessingChildContext();
-	        try {
-	          childContext = inst.getChildContext();
-	        } finally {
-	          ReactInstrumentation.debugTool.onEndProcessingChildContext();
-	        }
-	      } else {
-	        childContext = inst.getChildContext();
-	      }
+	    if (process.env.NODE_ENV !== 'production') {
+	      ReactInstrumentation.debugTool.onBeginProcessingChildContext();
 	    }
-
+	    var childContext = inst.getChildContext && inst.getChildContext();
+	    if (process.env.NODE_ENV !== 'production') {
+	      ReactInstrumentation.debugTool.onEndProcessingChildContext();
+	    }
 	    if (childContext) {
 	      !(typeof Component.childContextTypes === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getChildContext(): childContextTypes must be defined in order to use getChildContext().', this.getName() || 'ReactCompositeComponent') : _prodInvariant('107', this.getName() || 'ReactCompositeComponent') : void 0;
 	      if (process.env.NODE_ENV !== 'production') {
@@ -15695,11 +15705,15 @@
 	    // immediately reconciled instead of waiting for the next batch.
 	    if (willReceive && inst.componentWillReceiveProps) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        measureLifeCyclePerf(function () {
-	          return inst.componentWillReceiveProps(nextProps, nextContext);
-	        }, this._debugID, 'componentWillReceiveProps');
-	      } else {
-	        inst.componentWillReceiveProps(nextProps, nextContext);
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillReceiveProps');
+	        }
+	      }
+	      inst.componentWillReceiveProps(nextProps, nextContext);
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillReceiveProps');
+	        }
 	      }
 	    }
 
@@ -15709,11 +15723,15 @@
 	    if (!this._pendingForceUpdate) {
 	      if (inst.shouldComponentUpdate) {
 	        if (process.env.NODE_ENV !== 'production') {
-	          shouldUpdate = measureLifeCyclePerf(function () {
-	            return inst.shouldComponentUpdate(nextProps, nextState, nextContext);
-	          }, this._debugID, 'shouldComponentUpdate');
-	        } else {
-	          shouldUpdate = inst.shouldComponentUpdate(nextProps, nextState, nextContext);
+	          if (this._debugID !== 0) {
+	            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'shouldComponentUpdate');
+	          }
+	        }
+	        shouldUpdate = inst.shouldComponentUpdate(nextProps, nextState, nextContext);
+	        if (process.env.NODE_ENV !== 'production') {
+	          if (this._debugID !== 0) {
+	            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'shouldComponentUpdate');
+	          }
 	        }
 	      } else {
 	        if (this._compositeType === CompositeTypes.PureClass) {
@@ -15779,8 +15797,6 @@
 	   * @private
 	   */
 	  _performComponentUpdate: function (nextElement, nextProps, nextState, nextContext, transaction, unmaskedContext) {
-	    var _this2 = this;
-
 	    var inst = this._instance;
 
 	    var hasComponentDidUpdate = Boolean(inst.componentDidUpdate);
@@ -15795,11 +15811,15 @@
 
 	    if (inst.componentWillUpdate) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        measureLifeCyclePerf(function () {
-	          return inst.componentWillUpdate(nextProps, nextState, nextContext);
-	        }, this._debugID, 'componentWillUpdate');
-	      } else {
-	        inst.componentWillUpdate(nextProps, nextState, nextContext);
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillUpdate');
+	        }
+	      }
+	      inst.componentWillUpdate(nextProps, nextState, nextContext);
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillUpdate');
+	        }
 	      }
 	    }
 
@@ -15813,9 +15833,7 @@
 
 	    if (hasComponentDidUpdate) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        transaction.getReactMountReady().enqueue(function () {
-	          measureLifeCyclePerf(inst.componentDidUpdate.bind(inst, prevProps, prevState, prevContext), _this2._debugID, 'componentDidUpdate');
-	        });
+	        transaction.getReactMountReady().enqueue(invokeComponentDidUpdateWithTimer.bind(this, prevProps, prevState, prevContext), this);
 	      } else {
 	        transaction.getReactMountReady().enqueue(inst.componentDidUpdate.bind(inst, prevProps, prevState, prevContext), inst);
 	      }
@@ -15832,12 +15850,6 @@
 	    var prevComponentInstance = this._renderedComponent;
 	    var prevRenderedElement = prevComponentInstance._currentElement;
 	    var nextRenderedElement = this._renderValidatedComponent();
-
-	    var debugID = 0;
-	    if (process.env.NODE_ENV !== 'production') {
-	      debugID = this._debugID;
-	    }
-
 	    if (shouldUpdateReactComponent(prevRenderedElement, nextRenderedElement)) {
 	      ReactReconciler.receiveComponent(prevComponentInstance, nextRenderedElement, transaction, this._processChildContext(context));
 	    } else {
@@ -15850,12 +15862,15 @@
 	      );
 	      this._renderedComponent = child;
 
-	      var nextMarkup = ReactReconciler.mountComponent(child, transaction, this._hostParent, this._hostContainerInfo, this._processChildContext(context), debugID);
+	      var selfDebugID = 0;
+	      if (process.env.NODE_ENV !== 'production') {
+	        selfDebugID = this._debugID;
+	      }
+	      var nextMarkup = ReactReconciler.mountComponent(child, transaction, this._hostParent, this._hostContainerInfo, this._processChildContext(context), selfDebugID);
 
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (debugID !== 0) {
-	          var childDebugIDs = child._debugID !== 0 ? [child._debugID] : [];
-	          ReactInstrumentation.debugTool.onSetChildren(debugID, childDebugIDs);
+	        if (this._debugID !== 0) {
+	          ReactInstrumentation.debugTool.onSetChildren(this._debugID, child._debugID !== 0 ? [child._debugID] : []);
 	        }
 	      }
 
@@ -15877,14 +15892,17 @@
 	   */
 	  _renderValidatedComponentWithoutOwnerOrContext: function () {
 	    var inst = this._instance;
-	    var renderedComponent;
 
 	    if (process.env.NODE_ENV !== 'production') {
-	      renderedComponent = measureLifeCyclePerf(function () {
-	        return inst.render();
-	      }, this._debugID, 'render');
-	    } else {
-	      renderedComponent = inst.render();
+	      if (this._debugID !== 0) {
+	        ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'render');
+	      }
+	    }
+	    var renderedComponent = inst.render();
+	    if (process.env.NODE_ENV !== 'production') {
+	      if (this._debugID !== 0) {
+	        ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'render');
+	      }
 	    }
 
 	    if (process.env.NODE_ENV !== 'production') {
@@ -15935,7 +15953,7 @@
 	    var publicComponentInstance = component.getPublicInstance();
 	    if (process.env.NODE_ENV !== 'production') {
 	      var componentName = component && component.getName ? component.getName() : 'a component';
-	      process.env.NODE_ENV !== 'production' ? warning(publicComponentInstance != null || component._compositeType !== CompositeTypes.StatelessFunctional, 'Stateless function components cannot be given refs ' + '(See ref "%s" in %s created by %s). ' + 'Attempts to access this ref will fail.', ref, componentName, this.getName()) : void 0;
+	      process.env.NODE_ENV !== 'production' ? warning(publicComponentInstance != null, 'Stateless function components cannot be given refs ' + '(See ref "%s" in %s created by %s). ' + 'Attempts to access this ref will fail.', ref, componentName, this.getName()) : void 0;
 	    }
 	    var refs = inst.refs === emptyObject ? inst.refs = {} : inst.refs;
 	    refs[ref] = publicComponentInstance;
@@ -17126,15 +17144,10 @@
 
 	  var didWarn = {};
 
-	  validateDOMNesting = function (childTag, childText, childInstance, ancestorInfo) {
+	  validateDOMNesting = function (childTag, childInstance, ancestorInfo) {
 	    ancestorInfo = ancestorInfo || emptyAncestorInfo;
 	    var parentInfo = ancestorInfo.current;
 	    var parentTag = parentInfo && parentInfo.tag;
-
-	    if (childText != null) {
-	      process.env.NODE_ENV !== 'production' ? warning(childTag == null, 'validateDOMNesting: when childText is passed, childTag should be null') : void 0;
-	      childTag = '#text';
-	    }
 
 	    var invalidParent = isTagValidWithParent(childTag, parentTag) ? null : parentInfo;
 	    var invalidAncestor = invalidParent ? null : findInvalidAncestorForTag(childTag, ancestorInfo);
@@ -17183,15 +17196,7 @@
 	      didWarn[warnKey] = true;
 
 	      var tagDisplayName = childTag;
-	      var whitespaceInfo = '';
-	      if (childTag === '#text') {
-	        if (/\S/.test(childText)) {
-	          tagDisplayName = 'Text nodes';
-	        } else {
-	          tagDisplayName = 'Whitespace text nodes';
-	          whitespaceInfo = ' Make sure you don\'t have any extra whitespace between tags on ' + 'each line of your source code.';
-	        }
-	      } else {
+	      if (childTag !== '#text') {
 	        tagDisplayName = '<' + childTag + '>';
 	      }
 
@@ -17200,7 +17205,7 @@
 	        if (ancestorTag === 'table' && childTag === 'tr') {
 	          info += ' Add a <tbody> to your code to match the DOM tree generated by ' + 'the browser.';
 	        }
-	        process.env.NODE_ENV !== 'production' ? warning(false, 'validateDOMNesting(...): %s cannot appear as a child of <%s>.%s ' + 'See %s.%s', tagDisplayName, ancestorTag, whitespaceInfo, ownerInfo, info) : void 0;
+	        process.env.NODE_ENV !== 'production' ? warning(false, 'validateDOMNesting(...): %s cannot appear as a child of <%s>. ' + 'See %s.%s', tagDisplayName, ancestorTag, ownerInfo, info) : void 0;
 	      } else {
 	        process.env.NODE_ENV !== 'production' ? warning(false, 'validateDOMNesting(...): %s cannot appear as a descendant of ' + '<%s>. See %s.', tagDisplayName, ancestorTag, ownerInfo) : void 0;
 	      }
@@ -17507,7 +17512,7 @@
 	      if (parentInfo) {
 	        // parentInfo should always be present except for the top-level
 	        // component when server rendering
-	        validateDOMNesting(null, this._stringText, this, parentInfo);
+	        validateDOMNesting('#text', this, parentInfo);
 	      }
 	    }
 
@@ -19100,7 +19105,7 @@
 	      bubbled: keyOf({ onSelect: null }),
 	      captured: keyOf({ onSelectCapture: null })
 	    },
-	    dependencies: [topLevelTypes.topBlur, topLevelTypes.topContextMenu, topLevelTypes.topFocus, topLevelTypes.topKeyDown, topLevelTypes.topKeyUp, topLevelTypes.topMouseDown, topLevelTypes.topMouseUp, topLevelTypes.topSelectionChange]
+	    dependencies: [topLevelTypes.topBlur, topLevelTypes.topContextMenu, topLevelTypes.topFocus, topLevelTypes.topKeyDown, topLevelTypes.topMouseDown, topLevelTypes.topMouseUp, topLevelTypes.topSelectionChange]
 	  }
 	};
 
@@ -27138,15 +27143,15 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Home = __webpack_require__(290);
+	var _Home = __webpack_require__(291);
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Login = __webpack_require__(292);
+	var _Login = __webpack_require__(293);
 
 	var _Login2 = _interopRequireDefault(_Login);
 
-	var _Register = __webpack_require__(293);
+	var _Register = __webpack_require__(294);
 
 	var _Register2 = _interopRequireDefault(_Register);
 
@@ -27178,7 +27183,7 @@
 
 	var _reactRedux = __webpack_require__(245);
 
-	var _authentication = __webpack_require__(266);
+	var _authentication = __webpack_require__(267);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27638,7 +27643,7 @@
 	                            'a',
 	                            { className: 'waves-effect waves-light btn',
 	                                onClick: this.handleLogin },
-	                            'Login'
+	                            '전송'
 	                        )
 	                    )
 	                ),
@@ -27654,7 +27659,7 @@
 	                            _react2.default.createElement(
 	                                _reactRouter.Link,
 	                                { to: '/register' },
-	                                'Join'
+	                                '회원가입'
 	                            )
 	                        )
 	                    )
@@ -27672,7 +27677,7 @@
 	                        'a',
 	                        { className: 'waves-effect waves-light btn',
 	                            onClick: this.handleRegister },
-	                        'CREATE'
+	                        '가입'
 	                    )
 	                )
 	            );
@@ -27683,7 +27688,7 @@
 	                _react2.default.createElement(
 	                    _reactRouter.Link,
 	                    { className: 'logo', to: '/' },
-	                    '아마따 Authentication'
+	                    '아마따'
 	                ),
 	                _react2.default.createElement(
 	                    'div',
@@ -27694,7 +27699,7 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'card-content' },
-	                            this.props.mode ? "LOGIN" : "JOIN"
+	                            this.props.mode ? "로그인" : "회원가입"
 	                        )
 	                    ),
 	                    this.props.mode ? loginView : registerView
@@ -27779,11 +27784,19 @@
 	            var _this2 = this;
 
 	            var contents = this.state.contents;
+	            console.lot('contents', contents);
 
 	            this.props.onPost(contents).then(function () {
 	                _this2.setState({
 	                    contents: ""
 	                });
+	            });
+	        }
+	    }, {
+	        key: 'handleFuck',
+	        value: function handleFuck() {
+	            this.props.test().then(function () {
+	                console.log('????');
 	            });
 	        }
 	    }, {
@@ -27811,6 +27824,11 @@
 	                            'a',
 	                            { onClick: this.handlePost },
 	                            'POST'
+	                        ),
+	                        _react2.default.createElement(
+	                            'a',
+	                            { onClick: this.handleFuck },
+	                            'Fuck'
 	                        )
 	                    )
 	                )
@@ -27822,12 +27840,16 @@
 	}(_react2.default.Component);
 
 	Write.propTypes = {
-	    onPost: _react2.default.PropTypes.func
+	    onPost: _react2.default.PropTypes.func,
+	    test: _react2.default.PropTypes.func
 	};
 
 	Write.defaultProps = {
 	    onPost: function onPost(contents) {
-	        console.error('post function not defined');
+	        console.error('post function not defined', contents);
+	    },
+	    test: function test() {
+	        console.log('what the f');
 	    }
 	};
 
@@ -27871,6 +27893,24 @@
 	    }
 
 	    _createClass(Memo, [{
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate() {
+	            // WHEN COMPONENT UPDATES, INITIALIZE DROPDOWN
+	            // (TRIGGERED WHEN LOGGED IN)
+	            $('#dropdown-button-' + this.props.data._id).dropdown({
+	                belowOrigin: true // Displays dropdown below the button
+	            });
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            // WHEN COMPONENT MOUNTS, INITIALIZE DROPDOWN
+	            // (TRIGGERED WHEN REFRESHED)
+	            $('#dropdown-button-' + this.props.data._id).dropdown({
+	                belowOrigin: true // Displays dropdown below the button
+	            });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var _props = this.props;
@@ -27957,24 +27997,6 @@
 	                { className: 'container memo' },
 	                memoView
 	            );
-	        }
-	    }, {
-	        key: 'componentDidUpdate',
-	        value: function componentDidUpdate() {
-	            // WHEN COMPONENT UPDATES, INITIALIZE DROPDOWN
-	            // (TRIGGERED WHEN LOGGED IN)
-	            $('#dropdown-button-' + this.props.data._id).dropdown({
-	                belowOrigin: true // Displays dropdown below the button
-	            });
-	        }
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            // WHEN COMPONENT MOUNTS, INITIALIZE DROPDOWN
-	            // (TRIGGERED WHEN REFRESHED)
-	            $('#dropdown-button-' + this.props.data._id).dropdown({
-	                belowOrigin: true // Displays dropdown below the button
-	            });
 	        }
 	    }]);
 
@@ -28851,23 +28873,23 @@
 
 	var _createStore2 = _interopRequireDefault(_createStore);
 
-	var _combineReducers = __webpack_require__(261);
+	var _combineReducers = __webpack_require__(262);
 
 	var _combineReducers2 = _interopRequireDefault(_combineReducers);
 
-	var _bindActionCreators = __webpack_require__(263);
+	var _bindActionCreators = __webpack_require__(264);
 
 	var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 
-	var _applyMiddleware = __webpack_require__(264);
+	var _applyMiddleware = __webpack_require__(265);
 
 	var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 
-	var _compose = __webpack_require__(265);
+	var _compose = __webpack_require__(266);
 
 	var _compose2 = _interopRequireDefault(_compose);
 
-	var _warning = __webpack_require__(262);
+	var _warning = __webpack_require__(263);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -28904,7 +28926,7 @@
 
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-	var _symbolObservable = __webpack_require__(258);
+	var _symbolObservable = __webpack_require__(259);
 
 	var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
 
@@ -29161,7 +29183,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var getPrototype = __webpack_require__(255),
-	    isObjectLike = __webpack_require__(257);
+	    isHostObject = __webpack_require__(257),
+	    isObjectLike = __webpack_require__(258);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -29215,7 +29238,8 @@
 	 * // => true
 	 */
 	function isPlainObject(value) {
-	  if (!isObjectLike(value) || objectToString.call(value) != objectTag) {
+	  if (!isObjectLike(value) ||
+	      objectToString.call(value) != objectTag || isHostObject(value)) {
 	    return false;
 	  }
 	  var proto = getPrototype(value);
@@ -29268,6 +29292,32 @@
 /***/ function(module, exports) {
 
 	/**
+	 * Checks if `value` is a host object in IE < 9.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
+	 */
+	function isHostObject(value) {
+	  // Many host objects are `Object` objects that can coerce to strings
+	  // despite having improperly defined `toString` methods.
+	  var result = false;
+	  if (value != null && typeof value.toString != 'function') {
+	    try {
+	      result = !!(value + '');
+	    } catch (e) {}
+	  }
+	  return result;
+	}
+
+	module.exports = isHostObject;
+
+
+/***/ },
+/* 258 */
+/***/ function(module, exports) {
+
+	/**
 	 * Checks if `value` is object-like. A value is object-like if it's not `null`
 	 * and has a `typeof` result of "object".
 	 *
@@ -29292,21 +29342,21 @@
 	 * // => false
 	 */
 	function isObjectLike(value) {
-	  return value != null && typeof value == 'object';
+	  return !!value && typeof value == 'object';
 	}
 
 	module.exports = isObjectLike;
 
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(259);
+	module.exports = __webpack_require__(260);
 
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -29315,7 +29365,7 @@
 		value: true
 	});
 
-	var _ponyfill = __webpack_require__(260);
+	var _ponyfill = __webpack_require__(261);
 
 	var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -29334,7 +29384,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29362,7 +29412,7 @@
 	};
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -29376,7 +29426,7 @@
 
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-	var _warning = __webpack_require__(262);
+	var _warning = __webpack_require__(263);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -29510,7 +29560,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29540,7 +29590,7 @@
 	}
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29596,7 +29646,7 @@
 	}
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29607,7 +29657,7 @@
 
 	exports['default'] = applyMiddleware;
 
-	var _compose = __webpack_require__(265);
+	var _compose = __webpack_require__(266);
 
 	var _compose2 = _interopRequireDefault(_compose);
 
@@ -29659,7 +29709,7 @@
 	}
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29702,7 +29752,7 @@
 	}
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29725,9 +29775,9 @@
 	exports.logoutRequest = logoutRequest;
 	exports.logout = logout;
 
-	var _ActionTypes = __webpack_require__(267);
+	var _ActionTypes = __webpack_require__(268);
 
-	var _axios = __webpack_require__(268);
+	var _axios = __webpack_require__(269);
 
 	var _axios2 = _interopRequireDefault(_axios);
 
@@ -29854,7 +29904,7 @@
 	}
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29884,21 +29934,26 @@
 	var MEMO_POST_SUCCESS = exports.MEMO_POST_SUCCESS = "MEMO_POST_SUCCESS";
 	var MEMO_POST_FAILURE = exports.MEMO_POST_FAILURE = "MEMO_POST_FAILURE";
 
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(269);
+	// 메모 리스트
+	var MEMO_LIST = exports.MEMO_LIST = "MEMO_LIST";
+	var MEMO_LIST_SUCCESS = exports.MEMO_LIST_SUCCESS = "MEMO_LIST_SUCCESS";
+	var MEMO_LIST_FAILURE = exports.MEMO_LIST_FAILURE = "MEMO_LIST_FAILURE";
 
 /***/ },
 /* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = __webpack_require__(270);
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
-	var utils = __webpack_require__(270);
-	var bind = __webpack_require__(271);
-	var Axios = __webpack_require__(272);
+	var utils = __webpack_require__(271);
+	var bind = __webpack_require__(272);
+	var Axios = __webpack_require__(273);
 
 	/**
 	 * Create an instance of Axios
@@ -29934,7 +29989,7 @@
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(289);
+	axios.spread = __webpack_require__(290);
 
 	module.exports = axios;
 
@@ -29943,12 +29998,12 @@
 
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var bind = __webpack_require__(271);
+	var bind = __webpack_require__(272);
 
 	/*global toString:true*/
 
@@ -30248,7 +30303,7 @@
 
 
 /***/ },
-/* 271 */
+/* 272 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30265,17 +30320,17 @@
 
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var defaults = __webpack_require__(273);
-	var utils = __webpack_require__(270);
-	var InterceptorManager = __webpack_require__(275);
-	var dispatchRequest = __webpack_require__(276);
-	var isAbsoluteURL = __webpack_require__(287);
-	var combineURLs = __webpack_require__(288);
+	var defaults = __webpack_require__(274);
+	var utils = __webpack_require__(271);
+	var InterceptorManager = __webpack_require__(276);
+	var dispatchRequest = __webpack_require__(277);
+	var isAbsoluteURL = __webpack_require__(288);
+	var combineURLs = __webpack_require__(289);
 
 	/**
 	 * Create a new instance of Axios
@@ -30356,13 +30411,13 @@
 
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(270);
-	var normalizeHeaderName = __webpack_require__(274);
+	var utils = __webpack_require__(271);
+	var normalizeHeaderName = __webpack_require__(275);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -30434,12 +30489,12 @@
 
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(270);
+	var utils = __webpack_require__(271);
 
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -30452,12 +30507,12 @@
 
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(270);
+	var utils = __webpack_require__(271);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -30510,13 +30565,13 @@
 
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(270);
-	var transformData = __webpack_require__(277);
+	var utils = __webpack_require__(271);
+	var transformData = __webpack_require__(278);
 
 	/**
 	 * Dispatch a request to the server using whichever adapter
@@ -30557,10 +30612,10 @@
 	    adapter = config.adapter;
 	  } else if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(278);
+	    adapter = __webpack_require__(279);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(278);
+	    adapter = __webpack_require__(279);
 	  }
 
 	  return Promise.resolve(config)
@@ -30592,12 +30647,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(270);
+	var utils = __webpack_require__(271);
 
 	/**
 	 * Transform the data for a request or a response
@@ -30618,18 +30673,18 @@
 
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(270);
-	var settle = __webpack_require__(279);
-	var buildURL = __webpack_require__(282);
-	var parseHeaders = __webpack_require__(283);
-	var isURLSameOrigin = __webpack_require__(284);
-	var createError = __webpack_require__(280);
-	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(285);
+	var utils = __webpack_require__(271);
+	var settle = __webpack_require__(280);
+	var buildURL = __webpack_require__(283);
+	var parseHeaders = __webpack_require__(284);
+	var isURLSameOrigin = __webpack_require__(285);
+	var createError = __webpack_require__(281);
+	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(286);
 
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -30723,7 +30778,7 @@
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(286);
+	      var cookies = __webpack_require__(287);
 
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -30787,12 +30842,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createError = __webpack_require__(280);
+	var createError = __webpack_require__(281);
 
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -30818,12 +30873,12 @@
 
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var enhanceError = __webpack_require__(281);
+	var enhanceError = __webpack_require__(282);
 
 	/**
 	 * Create an Error with the specified message, config, error code, and response.
@@ -30841,7 +30896,7 @@
 
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30866,12 +30921,12 @@
 
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(270);
+	var utils = __webpack_require__(271);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -30940,12 +30995,12 @@
 
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(270);
+	var utils = __webpack_require__(271);
 
 	/**
 	 * Parse headers into an object
@@ -30983,12 +31038,12 @@
 
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(270);
+	var utils = __webpack_require__(271);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -31057,7 +31112,7 @@
 
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31099,12 +31154,12 @@
 
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(270);
+	var utils = __webpack_require__(271);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -31158,7 +31213,7 @@
 
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31178,7 +31233,7 @@
 
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31196,7 +31251,7 @@
 
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31229,7 +31284,7 @@
 
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31248,7 +31303,7 @@
 
 	var _components = __webpack_require__(238);
 
-	var _memo = __webpack_require__(291);
+	var _memo = __webpack_require__(292);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31268,22 +31323,58 @@
 	        var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
 
 	        _this.handlePost = _this.handlePost.bind(_this);
+	        _this.loadNewMemo = _this.loadNewMemo.bind(_this);
 	        return _this;
 	    }
 
-	    /* POST MEMO */
-
-
 	    _createClass(Home, [{
-	        key: 'handlePost',
-	        value: function handlePost(contents) {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
 	            var _this2 = this;
 
+	            // 5초마다 새 메모 가져오기
+	            var loadMemoLoop = function loadMemoLoop() {
+	                _this2.loadNewMemo().then(function () {
+	                    _this2.memoLoaderTimeoutId = setTimeout(loadMemoLoop, 10000);
+	                });
+	            };
+	            this.props.memoListRequest(true).then(function () {
+	                console.log('componentDidMount', _this2.props.memoData);
+	                loadMemoLoop();
+	            });
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            // STOPS THE loadMemoLoop
+	            clearTimeout(this.memoLoaderTimeoutId);
+	        }
+	    }, {
+	        key: 'loadNewMemo',
+	        value: function loadNewMemo() {
+	            // CANCEL IF THERE IS A PENDING REQUEST
+	            if (this.props.listStatus === 'WAITING') return new Promise(function (resolve, reject) {
+	                resolve();
+	            });
+
+	            // IF PAGE IS EMPTY, DO THE INITIAL LOADING
+	            if (this.props.memoData.length === 0) return this.props.memoListRequest(true);
+
+	            return this.props.memoListRequest(false, 'new', this.props.memoData[0]._id);
+	        }
+
+	        /* POST MEMO */
+
+	    }, {
+	        key: 'handlePost',
+	        value: function handlePost(contents) {
+	            var _this3 = this;
+
 	            return this.props.memoPostRequest(contents).then(function () {
-	                if (_this2.props.postStatus.status === "SUCCESS") {
+	                if (_this3.props.postStatus.status === "SUCCESS") {
 	                    // TRIGGER LOAD NEW MEMO
 	                    // TO BE IMPLEMENTED
-	                    Materialize.toast('Success!', 2000);
+	                    Materialize.toast('성공!', 2000);
 	                } else {
 	                    /*
 	                        ERROR CODES
@@ -31291,7 +31382,7 @@
 	                            2: EMPTY CONTENTS
 	                    */
 	                    var $toastContent = void 0;
-	                    switch (_this2.props.postStatus.error) {
+	                    switch (_this3.props.postStatus.error) {
 	                        case 1:
 	                            // IF NOT LOGGED IN, NOTIFY AND REFRESH AFTER
 	                            $toastContent = $('<span style="color: #FFB4BA">로그인 먼저 해주세요</span>');
@@ -31315,81 +31406,15 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var write = _react2.default.createElement(_components.Write, { onPost: this.handlePost });
-
-	            var testData = [{
-	                "_id": "578b958ec1da760909c263f4",
-	                "writer": " [공통] K-CESA(대학생 핵심역량진단) 설명회 안내  ",
-	                "contents": "ACE) K-CESA(대학생 핵심역량진단) 설명회 안내  1. 목적 ○ 대학 전체의 교육력 진단을 위한 사업에 대한 학생 이해도 증진○ 참여학생들의 효율성 및 적극성 확보로 진단결과의 질 향상○ K-CESA를 통한 학생 개인의 커리어 포트폴리오 구성 진단  2. 대상○ 진단 대상자로 선발된 재학생※ 설명회 안내 문자를 받은 학생은 K-CESA 대상자로 선발된 학생이므로 설명회에 가급적 참석하기 바람   3. 강사○ 강사 : 이인재 교수(관광경영학과, 교육과정평",
-	                "__v": 0,
-	                "is_edited": false,
-	                "date": {
-	                    "edited": "2016-07-17T14:26:22.428Z",
-	                    "created": "2016-07-17T14:26:22.428Z"
-	                },
-	                "starred": []
-	            }, {
-	                "_id": "578b957ec1da760909c263f3",
-	                "writer": " [공통] [ACE] Gachon 4C Up Zone 조교 채용  ",
-	                "contents": "Gachon 4C Up Zone 조교 채용  1. 모 집 : 조교 1명 2. 근무부서 : Gachon 4C UP Zone - ACE Office 3. 근무시간 : 09:00 ~ 17:30 (방학중 단축근무 09:00-16:00 ) 4. 근무시작 : 9월중(근무시작일 조율) 5. 업무내용 :    - ACE 장학금 서류 및 예산 정리 작업  - Honors 및 R.C. 프로그램 관련 서류 정리 작업  - G-OKC 촬영 장비 등 정비  - Gachon 4C Up Zone 강의실 정비  - 그외 ACE 사업 관련 업무 지원 6. 급 여 : 가천대학",
-	                "__v": 0,
-	                "is_edited": false,
-	                "date": {
-	                    "edited": "2016-07-17T14:26:06.999Z",
-	                    "created": "2016-07-17T14:26:06.999Z"
-	                },
-	                "starred": []
-	            }, {
-	                "_id": "578b957cc1da760909c263f2",
-	                "writer": " [공통] 2016학년도 2학기 수강포기 안내  ",
-	                "contents": " 2016학년도 2학기 수강포기 안내  1. 기간 : 2016. 9. 22(목) 09:00 ~ 9. 28(수) 24:00 <7일간> 2. 절차 : 홈페이지(로그인) → 학사행정 → 학부학사 → 수업관리 → 수강신청포기   → ‘포기신청을 하시겠습니까?’에서 예(Y)를 클릭 → 결과 확인  3. 유의사항  가. 수강신청 포기한 교과목은 성적표 및 성적증명서에 포기(W)로 처리하나 성적평점에 포함되지 않음  ※졸업예정자와 졸업자 성적증명서에는 수강포기(W) 기록 없이 성적증명서 발급",
-	                "__v": 0,
-	                "is_edited": false,
-	                "date": {
-	                    "edited": "2016-07-17T14:26:04.195Z",
-	                    "created": "2016-07-17T14:26:04.195Z"
-	                },
-	                "starred": []
-	            }, {
-	                "_id": "578b9579c1da760909c263f1",
-	                "writer": " [글로벌] 미국 실리콘밸리 방문학생 인턴십 프로그램 설명회  ",
-	                "contents": "  미국 실리콘밸리 방문학생 인턴십 프로그램  설명회     2017학년도 1학기 미국 실리콘밸리 방문학생 인턴십 프로그램의 설명회를 아래와 같이 진행하오니 많은 참여 부탁드립니다.    일 시 : 2016. 9. 20(화) 오후 5시장 소 : 가천관 940호내 용 : 프로그램 소개, 선발내용 설명, 1기 파견학생과의 질의응답문 의 : 국제교류처 (031-750-5673) *본 프로그램의 모집공고는 아래 링크를 참고 바랍니다:   참가자 모집 공고 바로가기   국 제 교 류 처    ",
-	                "__v": 0,
-	                "is_edited": false,
-	                "date": {
-	                    "edited": "2016-07-17T14:26:01.062Z",
-	                    "created": "2016-07-17T14:26:01.062Z"
-	                },
-	                "starred": []
-	            }, {
-	                "_id": "578b9576c1da760909c263f0",
-	                "writer": " [공통] [ACE] 2학기 ‘힐링 멘토링’ 멘토 추가모집  ",
-	                "contents": " [ACE] 2학기 ‘힐링 멘토링’ 멘토 추가모집  힐링 멘토링이란 학업, 진로, 학교생활, 건강, 취업문제에서 받는 스트레스와 고민에 대해 멘토와 함께 나누고 해결, 성장해 나감으로서 건강하고 행복한 학교생활이 되도록 도와주는 활동입니다. 2016-2학기 ‘힐링 멘토링’ 참가자를 다음과 같이 모집합니다. 1. 모집대상:   멘토-본교 3학년 이상 재학생, 대학원생, 졸업생, 교직원, 교수   ＊멘토 지원자는 멘토교육 동영상 보내드립니다. 2. 선발인원: 00명3. 지원자",
-	                "__v": 0,
-	                "is_edited": false,
-	                "date": {
-	                    "edited": "2016-07-17T14:25:58.619Z",
-	                    "created": "2016-07-17T14:25:58.619Z"
-	                },
-	                "starred": []
-	            }, {
-	                "_id": "578b8c82c1da760909c263ef",
-	                "writer": " [공통] 3D프린터를 활용한 창업 시제품제작 교육 수강생 모집  ",
-	                "contents": " 3D프린터를 활용한 창업 시제품제작 교육 수강생 모집  가천대학교 재학생들을 대상으로 3D 프린터를 활용한 시제품제작 교육생을 모집합니다.3D 프린터의 기초에서부터 설계, 시제품 제작, 후가공까지 3D 프린터의 모든 것을 경험해 볼 수 있으니 많은 관심과 참여 바랍니다. 1. 교육기간 및 모집기간구분교육기간모집기간수강안내1차09월 26일(월) ~ 09월 29일(목)~9월 22일(목)9월 23일(금)2차10월 04일(화) ~ 10월 07일(금)~9월 29일",
-	                "__v": 0,
-	                "is_edited": false,
-	                "date": {
-	                    "edited": "2016-07-17T13:47:46.611Z",
-	                    "created": "2016-07-17T13:47:46.611Z"
-	                },
-	                "starred": []
-	            }];
+	            var write = _react2.default.createElement(_components.Write, {
+	                onPost: this.props.handlePost
+	            });
 
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'wrapper' },
 	                this.props.isLoggedIn ? write : undefined,
-	                _react2.default.createElement(_components.MemoList, { data: testData, currentUser: 'hak' })
+	                _react2.default.createElement(_components.MemoList, { data: this.props.memoData, currentUser: this.props.currentUser })
 	            );
 	        }
 	    }]);
@@ -31397,11 +31422,17 @@
 	    return Home;
 	}(_react2.default.Component);
 
+	// <MemoList data={testData} currentUser="hak"/> // 테스트 데이터
+
+
 	var mapStateToProps = function mapStateToProps(state) {
-	    console.log(state);
+	    console.log('state', state);
 	    return {
 	        isLoggedIn: state.authentication.status.isLoggedIn,
-	        postStatus: state.memo.post
+	        postStatus: state.memo.post,
+	        currentUser: state.authentication.status.currentUser,
+	        memoData: state.memo.list.data,
+	        listStatus: state.memo.list.status
 	    };
 	};
 
@@ -31409,6 +31440,9 @@
 	    return {
 	        memoPostRequest: function memoPostRequest(contents) {
 	            return dispatch((0, _memo.memoPostRequest)(contents));
+	        },
+	        memoListRequest: function memoListRequest(isInitial, listType, id, username) {
+	            return dispatch((0, _memo.memoListRequest)(isInitial, listType, id, username));
 	        }
 	    };
 	};
@@ -31416,7 +31450,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
 
 /***/ },
-/* 291 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31428,10 +31462,14 @@
 	exports.memoPost = memoPost;
 	exports.memoPostSuccess = memoPostSuccess;
 	exports.memoPostFailure = memoPostFailure;
+	exports.memoListRequest = memoListRequest;
+	exports.memoList = memoList;
+	exports.memoListSuccess = memoListSuccess;
+	exports.memoListFailure = memoListFailure;
 
-	var _ActionTypes = __webpack_require__(267);
+	var _ActionTypes = __webpack_require__(268);
 
-	var _axios = __webpack_require__(268);
+	var _axios = __webpack_require__(269);
 
 	var _axios2 = _interopRequireDefault(_axios);
 
@@ -31440,13 +31478,12 @@
 	/* MEMO POST */
 	function memoPostRequest(contents) {
 	    return function (dispatch) {
-	        // to be implemented
 	        dispatch(memoPost());
 
 	        return _axios2.default.post('/api/memo/', { contents: contents }).then(function (response) {
 	            dispatch(memoPostSuccess());
 	        }).catch(function (error) {
-	            dispatch(memoPostFailure(error.response.data.code));
+	            dispatch(memoPostError(error.response.data.code));
 	        });
 	    };
 	}
@@ -31470,8 +31507,62 @@
 	    };
 	}
 
+	/* MEMO LIST */
+
+	/*
+	    Parameter:
+	        - isInitial: whether it is for initial loading
+	        - listType:  OPTIONAL; loading 'old' memo or 'new' memo
+	        - id:        OPTIONAL; memo id (one at the bottom or one at the top)
+	        - username:  OPTIONAL; find memos of following user
+	*/
+	function memoListRequest(isInitial, listType, id, username) {
+	    return function (dispatch) {
+	        // to be implemented
+	        dispatch(memoList());
+
+	        var url = '/api/memo';
+
+	        /* url setup depending on parameters,
+	           to  be implemented.. */
+	        if (typeof username === "undefined") {
+	            // username not given, load public memo
+	            url = isInitial ? url : url + '/' + listType + '/' + id;
+	            // or url + '/' + listType + '/' +  id
+	        } else {
+	                /* TO BE IMPLEMENTED */
+	            }
+
+	        return _axios2.default.get(url).then(function (response) {
+	            dispatch(memoListSuccess(response.data, isInitial, listType));
+	        }).catch(function (error) {
+	            dispatch(memoListFailure());
+	        });
+	    };
+	}
+	function memoList() {
+	    return {
+	        type: _ActionTypes.MEMO_LIST
+	    };
+	}
+
+	function memoListSuccess(data, isInitial, listType) {
+	    return {
+	        type: _ActionTypes.MEMO_LIST_SUCCESS,
+	        data: data,
+	        isInitial: isInitial,
+	        listType: listType
+	    };
+	}
+
+	function memoListFailure() {
+	    return {
+	        type: _ActionTypes.MEMO_LIST_FAILURE
+	    };
+	}
+
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31490,7 +31581,7 @@
 
 	var _reactRedux = __webpack_require__(245);
 
-	var _authentication = __webpack_require__(266);
+	var _authentication = __webpack_require__(267);
 
 	var _reactRouter = __webpack_require__(173);
 
@@ -31573,7 +31664,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Login);
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31592,7 +31683,7 @@
 
 	var _reactRedux = __webpack_require__(245);
 
-	var _authentication = __webpack_require__(266);
+	var _authentication = __webpack_require__(267);
 
 	var _reactRouter = __webpack_require__(173);
 
@@ -31675,7 +31766,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Register);
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31684,11 +31775,11 @@
 	    value: true
 	});
 
-	var _authentication = __webpack_require__(295);
+	var _authentication = __webpack_require__(296);
 
 	var _authentication2 = _interopRequireDefault(_authentication);
 
-	var _memo = __webpack_require__(298);
+	var _memo = __webpack_require__(299);
 
 	var _memo2 = _interopRequireDefault(_memo);
 
@@ -31702,7 +31793,7 @@
 	});
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31712,11 +31803,11 @@
 	});
 	exports.default = authentication;
 
-	var _ActionTypes = __webpack_require__(267);
+	var _ActionTypes = __webpack_require__(268);
 
 	var types = _interopRequireWildcard(_ActionTypes);
 
-	var _reactAddonsUpdate = __webpack_require__(296);
+	var _reactAddonsUpdate = __webpack_require__(297);
 
 	var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
 
@@ -31824,13 +31915,13 @@
 	}
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(297);
+	module.exports = __webpack_require__(298);
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31949,7 +32040,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31959,11 +32050,11 @@
 	});
 	exports.default = memo;
 
-	var _ActionTypes = __webpack_require__(267);
+	var _ActionTypes = __webpack_require__(268);
 
 	var types = _interopRequireWildcard(_ActionTypes);
 
-	var _reactAddonsUpdate = __webpack_require__(296);
+	var _reactAddonsUpdate = __webpack_require__(297);
 
 	var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
 
@@ -31975,6 +32066,11 @@
 	    post: {
 	        status: 'INIT',
 	        error: -1
+	    },
+	    list: {
+	        status: 'INIT',
+	        data: [],
+	        isLast: false
 	    }
 	};
 
@@ -32004,13 +32100,58 @@
 	                    error: { $set: action.error }
 	                }
 	            });
+	        case types.MEMO_LIST:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                list: {
+	                    status: { $set: 'WAITING' }
+	                }
+	            });
+	        case types.MEMO_LIST_SUCCESS:
+	            if (action.isInitial) {
+	                return (0, _reactAddonsUpdate2.default)(state, {
+	                    list: {
+	                        status: { $set: 'SUCCESS' },
+	                        data: { $set: action.data },
+	                        // 현재 로딩이 마지막인지 알려줌, 6개 미만이면 더 이상 메모 없다.
+	                        isLast: { $set: action.data.length < 6 }
+	                    }
+	                });
+	            } else {
+	                if (action.listType === 'new') {
+	                    return (0, _reactAddonsUpdate2.default)(state, {
+	                        list: {
+	                            status: { $set: 'SUCCESS' },
+	                            // 배열 앞에 추가
+	                            data: { $unshift: action.data }
+	                        }
+	                    });
+	                } else {
+	                    return (0, _reactAddonsUpdate2.default)(state, {
+	                        list: {
+	                            status: { $set: 'SUCCESS' },
+	                            // 배열 뒤에 추가
+	                            data: { $push: action.data },
+	                            isLast: { $set: action.data.length < 6 }
+	                        }
+	                    });
+	                }
+	            }
+	            // loading older or newer memo
+	            // to be implemented..
+	            return state;
+	        case types.MEMO_LIST_FAILURE:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                list: {
+	                    status: { $set: 'FAILURE' }
+	                }
+	            });
 	        default:
 	            return state;
 	    }
 	}
 
 /***/ },
-/* 299 */
+/* 300 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32038,16 +32179,16 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 300 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(301);
+	var content = __webpack_require__(302);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(303)(content, {});
+	var update = __webpack_require__(304)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -32064,10 +32205,10 @@
 	}
 
 /***/ },
-/* 301 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(302)();
+	exports = module.exports = __webpack_require__(303)();
 	// imports
 
 
@@ -32078,7 +32219,7 @@
 
 
 /***/ },
-/* 302 */
+/* 303 */
 /***/ function(module, exports) {
 
 	/*
@@ -32134,7 +32275,7 @@
 
 
 /***/ },
-/* 303 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

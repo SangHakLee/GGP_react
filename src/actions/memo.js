@@ -2,23 +2,22 @@ import {
     MEMO_POST,
     MEMO_POST_SUCCESS,
     MEMO_POST_FAILURE,
-	MEMO_LIST,
-	MEMO_LIST_SUCCESS,
-	MEMO_LIST_FAILURE
+    MEMO_LIST,
+    MEMO_LIST_SUCCESS,
+    MEMO_LIST_FAILURE
 } from './ActionTypes';
 import axios from 'axios';
 
 /* MEMO POST */
 export function memoPostRequest(contents) {
     return (dispatch) => {
-        // to be implemented
         dispatch(memoPost());
 
         return axios.post('/api/memo/', { contents })
         .then((response) => {
             dispatch(memoPostSuccess());
         }).catch((error) => {
-            dispatch(memoPostFailure(error.response.data.code));
+            dispatch(memoPostError(error.response.data.code));
         });
     };
 }
@@ -42,6 +41,7 @@ export function memoPostFailure(error) {
     };
 }
 
+/* MEMO LIST */
 
 /*
     Parameter:
@@ -52,21 +52,20 @@ export function memoPostFailure(error) {
 */
 export function memoListRequest(isInitial, listType, id, username) {
     return (dispatch) => {
-		dispatch(memoList());
+        // to be implemented
+        dispatch(memoList());
 
         let url = '/api/memo';
 
         /* url setup depending on parameters,
            to  be implemented.. */
-
-	   if(typeof username==="undefined") {
-           // username not given, load public memo
-           url = isInitial ? url : `${url}/${listType}/${id}`;
-           // or url + '/' + listType + '/' +  id
-       } else {
-           // load memos of specific user
-           /* to be implemented */
-       }
+        if(typeof username === "undefined") {
+            // username not given, load public memo
+            url = isInitial ? url : `${url}/${listType}/${id}`;
+            // or url + '/' + listType + '/' +  id
+        } else {
+            /* TO BE IMPLEMENTED */
+        }
 
         return axios.get(url)
         .then((response) => {
@@ -74,9 +73,9 @@ export function memoListRequest(isInitial, listType, id, username) {
         }).catch((error) => {
             dispatch(memoListFailure());
         });
+
     };
 }
-
 export function memoList() {
     return {
         type: MEMO_LIST

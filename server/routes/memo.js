@@ -44,7 +44,7 @@ router.post('/', (req, res) => {
 
     // SAVE IN DATABASE
     memo.save( err => {
-        if(err) throw err;
+        if(err) {console.log('err', err);throw err;}
         return res.json({ success: true });
     });
 });
