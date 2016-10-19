@@ -36,9 +36,11 @@ app.use('/', express.static(path.join(__dirname, './../public')));
 import api from './routes';
 app.use('/api', api);
 
-app.get('/hello', (req, res) => {
-    return res.send('Hello CodeLab');
+/* support client-side routing */
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './../public/index.html'));
 });
+
 
 /* handle error */
 app.use(function(err, req, res, next) {
