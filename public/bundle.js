@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(243);
+	module.exports = __webpack_require__(244);
 
 
 /***/ },
@@ -27126,15 +27126,15 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Home = __webpack_require__(240);
+	var _Home = __webpack_require__(241);
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Login = __webpack_require__(241);
+	var _Login = __webpack_require__(242);
 
 	var _Login2 = _interopRequireDefault(_Login);
 
-	var _Register = __webpack_require__(242);
+	var _Register = __webpack_require__(243);
 
 	var _Register2 = _interopRequireDefault(_Register);
 
@@ -27218,15 +27218,20 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Header = undefined;
+	exports.Authentication = exports.Header = undefined;
 
 	var _Header = __webpack_require__(239);
 
 	var _Header2 = _interopRequireDefault(_Header);
 
+	var _Authentication = __webpack_require__(240);
+
+	var _Authentication2 = _interopRequireDefault(_Authentication);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.Header = _Header2.default;
+	exports.Authentication = _Authentication2.default;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "index.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
@@ -27275,8 +27280,8 @@
 	                'li',
 	                null,
 	                _react2.default.createElement(
-	                    'a',
-	                    null,
+	                    _reactRouter.Link,
+	                    { to: '/login' },
 	                    _react2.default.createElement(
 	                        'i',
 	                        { className: 'material-icons' },
@@ -27378,6 +27383,177 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(173);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Authentication = function (_React$Component) {
+	    _inherits(Authentication, _React$Component);
+
+	    function Authentication() {
+	        _classCallCheck(this, Authentication);
+
+	        return _possibleConstructorReturn(this, (Authentication.__proto__ || Object.getPrototypeOf(Authentication)).apply(this, arguments));
+	    }
+
+	    _createClass(Authentication, [{
+	        key: 'render',
+	        value: function render() {
+	            var inputBoxes = _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'input-field col s12 username' },
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        '아이디'
+	                    ),
+	                    _react2.default.createElement('input', {
+	                        name: 'username',
+	                        type: 'text',
+	                        className: 'validate' })
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'input-field col s12' },
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        '비밀번호'
+	                    ),
+	                    _react2.default.createElement('input', {
+	                        name: 'password',
+	                        type: 'password',
+	                        className: 'validate' })
+	                )
+	            );
+
+	            var loginView = _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'card-content' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'row' },
+	                        inputBoxes,
+	                        _react2.default.createElement(
+	                            'a',
+	                            { className: 'waves-effect waves-light btn' },
+	                            '로그인'
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'footer' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'card-content' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'right' },
+	                            _react2.default.createElement(
+	                                _reactRouter.Link,
+	                                { to: '/register' },
+	                                '회원가입'
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+
+	            var registerView = _react2.default.createElement(
+	                'div',
+	                { className: 'card-content' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'row' },
+	                    inputBoxes,
+	                    _react2.default.createElement(
+	                        'a',
+	                        { className: 'waves-effect waves-light btn' },
+	                        '회원가입'
+	                    )
+	                )
+	            );
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'container auth' },
+	                _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { className: 'logo', to: '/' },
+	                    '아마따'
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'card' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'header blue white-text center' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'card-content' },
+	                            this.props.mode ? "LOGIN" : "REGISTER"
+	                        )
+	                    ),
+	                    this.props.mode ? loginView : registerView
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Authentication;
+	}(_react2.default.Component);
+
+	Authentication.propTypes = {
+	    mode: _react2.default.PropTypes.bool,
+	    onLogin: _react2.default.PropTypes.func,
+	    onRegister: _react2.default.PropTypes.func
+	};
+
+	Authentication.defaultProps = {
+	    mode: true, // login.js register.js 에서 값을 설정한다.
+	    onLogin: function onLogin(id, pw) {
+	        console.error("onLogin 실패");
+	    },
+	    onRegister: function onRegister(id, pw) {
+	        console.error("onRegister 실패");
+	    }
+	};
+
+	exports.default = Authentication;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Authentication.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27415,7 +27591,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Home.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 241 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -27431,6 +27607,8 @@
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _components = __webpack_require__(238);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27456,7 +27634,7 @@
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                'Login'
+	                _react2.default.createElement(_components.Authentication, { mode: true })
 	            );
 	        }
 	    }]);
@@ -27469,7 +27647,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Login.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -27485,6 +27663,8 @@
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _components = __webpack_require__(238);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27510,7 +27690,7 @@
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                'Register'
+	                _react2.default.createElement(_components.Authentication, { mode: false })
 	            );
 	        }
 	    }]);
@@ -27523,16 +27703,16 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Register.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(244);
+	var content = __webpack_require__(245);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(246)(content, {});
+	var update = __webpack_require__(247)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -27549,21 +27729,21 @@
 	}
 
 /***/ },
-/* 244 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(245)();
+	exports = module.exports = __webpack_require__(246)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "body {\n    background-color: #ECEFF1;\n}\n", ""]);
+	exports.push([module.id, "body {\n    background-color: #ECEFF1;\n}\n\n/* Authentication */\n.auth {\n  margin-top: 50px;\n    text-align: center;\n}\n\n.logo {\n    text-align: center;\n    font-weight: 100;\n    font-size: 80px;\n    -webkit-user-select: none;\n    /* Chrome all / Safari all */\n    -moz-user-select: none;\n    /* Firefox all */\n    -ms-user-select: none;\n    /* IE 10+ */\n    user-select: none;\n    /* Likely future */\n}\n\na.logo {\n    color: #5B5B5B;\n}\n\na {\n    cursor: pointer;\n}\n\n.auth .card {\n    width: 400px;\n    margin: 0 auto;\n}\n\n\n@media screen and (max-width: 480px) {\n  .auth .card {\n    width: 100%;\n  }\n\n  .logo {\n    font-size: 60px;\n  }\n}\n\n\n\n.auth .header {\n    font-size: 18px;\n}\n\n.auth .row {\n    margin-bottom: 0px;\n}\n\n.auth .username {\n  margin-top: 0px;\n}\n\n.auth .btn {\n    width: 90%;\n}\n\n.auth .footer {\n    border-top: 1px solid #E9E9E9;\n    padding-bottom: 21px;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports) {
 
 	/*
@@ -27619,7 +27799,7 @@
 
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
