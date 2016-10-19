@@ -1,7 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
+
 import { App, Home, Login, Register } from 'containers';
+
+// Redux
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import reducers from 'reducers';
+import thunk from 'redux-thunk';
 
 const rootElement = document.getElementById('root');
 ReactDOM.render(

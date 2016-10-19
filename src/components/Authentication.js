@@ -26,14 +26,18 @@ class Authentication extends React.Component {
 					<input
 					name="username"
 					type="text"
-					className="validate"/>
+					className="validate"
+                    onChange={this.handleChange}
+                    value={this.state.username}/>
 				</div>
 				<div className="input-field col s12">
 					<label>비밀번호</label>
 					<input
 					name="password"
 					type="password"
-					className="validate"/>
+					className="validate"
+                    onChange={this.handleChange}
+                    value={this.state.password}/>
 				</div>
 			</div>
 		);
