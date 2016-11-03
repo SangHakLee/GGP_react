@@ -1,5 +1,5 @@
 import express from 'express';
-
+import Account from '../models/account';
 const router = express.Router();
 
 /*
@@ -19,6 +19,7 @@ router.post('/signin', (req, res) => {
 
     // FIND THE USER BY USERNAME
     Account.findOne({ username: req.body.username}, (err, account) => {
+		console.log(account)
         if(err) throw err;
 
         // CHECK ACCOUNT EXISTANCY

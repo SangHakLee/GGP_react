@@ -1,4 +1,4 @@
-import * as types from 'actions/ActionTypes';
+import * as types from 'actions/ActionTypes'; // 이 코드는 ActionTypes 에서 export 한 모든 상수를 types 객체에 넣어서 불러옵니다.
 import update from 'react-addons-update';
 
 const initialState = {

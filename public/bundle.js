@@ -83,18 +83,24 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Redux
+	var store = (0, _redux.createStore)(_reducers2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default));
+
 	var rootElement = document.getElementById('root');
 	_reactDom2.default.render(_react2.default.createElement(
-	    _reactRouter.Router,
-	    { history: _reactRouter.browserHistory },
-	    _react2.default.createElement(
-	        _reactRouter.Route,
-	        { path: '/', component: _containers.App },
-	        _react2.default.createElement(_reactRouter.IndexRoute, { component: _containers.Home }),
-	        _react2.default.createElement(_reactRouter.Route, { path: 'home', component: _containers.Home }),
-	        _react2.default.createElement(_reactRouter.Route, { path: 'login', component: _containers.Login }),
-	        _react2.default.createElement(_reactRouter.Route, { path: 'register', component: _containers.Register })
-	    )
+		_reactRedux.Provider,
+		{ store: store },
+		_react2.default.createElement(
+			_reactRouter.Router,
+			{ history: _reactRouter.browserHistory },
+			_react2.default.createElement(
+				_reactRouter.Route,
+				{ path: '/', component: _containers.App },
+				_react2.default.createElement(_reactRouter.IndexRoute, { component: _containers.Home }),
+				_react2.default.createElement(_reactRouter.Route, { path: 'home', component: _containers.Home }),
+				_react2.default.createElement(_reactRouter.Route, { path: 'login', component: _containers.Login }),
+				_react2.default.createElement(_reactRouter.Route, { path: 'register', component: _containers.Register })
+			)
+		)
 	), rootElement);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/ryan/React/react-codelab-project/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "index.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
@@ -29417,8 +29423,7 @@
 	        isLoggedIn: false,
 	        currentUser: ''
 	    }
-	};
-
+	}; // 이 코드는 ActionTypes 에서 export 한 모든 상수를 types 객체에 넣어서 불러옵니다.
 	function authentication(state, action) {
 	    if (typeof state === "undefined") state = initialState;
 
